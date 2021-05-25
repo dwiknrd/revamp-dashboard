@@ -59,11 +59,6 @@ def busy_month():
 
     return graphJSON
 
-# # Month with the Highest Average Daily Rate
-# adr_month_hotel =  data.groupby(['arrival_month', 'hotel']).mean()['adr'].round(2).reset_index()
-# adr_month_hotel['arrival_month'] = pd.Categorical(adr_month_hotel['arrival_month'], categories = month)  
-
-# adr_month_hotel = adr_month_hotel.sort_values('arrival_month')
 
 def create_line():
     N = 40
