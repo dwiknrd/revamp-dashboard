@@ -30,7 +30,7 @@ def country_of_guests():
                                         locations=country_guests['country'],
                                         color=country_guests['Number of guest'],
                                         hover_name=country_guests['country'],
-                                        title='Home Country of Guests')
+                                        title=None)
 
     graphJSON = json.dumps(plot_country_guests, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -45,7 +45,7 @@ def busy_month():
         final_rush,
         x = final_rush.index,
         y = ['City Hotel', 'Resort Hotel'],
-        title = 'The Most Busy Month',
+        title = None,
         labels = {
             'arrival_month':'Month',
             'variable':'Hotel',
@@ -79,21 +79,37 @@ def create_line():
     return graphJSON
 
 
-
+# This is code to create server using Flask
 app = Flask(__name__)
 
-
+# To connect with first page
 @app.route('/')
 def index():
+
+    # Define your plot function here
     country_of_guests_plot = country_of_guests()
     busy_month_plot = busy_month()
     
-    return render_template('index.html', barplot=country_of_guests_plot, busy_month=busy_month_plot)
+    # Render your plot to first (index.html) page
+    return render_template(
+        'index.html',
+        country_of_guests_plot=country_of_guests_plot,
+        busy_month_plot=busy_month_plot
 
+    )
+
+# To connect with second page
 @app.route('/analysis')
 def analysis():
+
+    # Define your plot function here
     line = create_line()
-    return render_template('analysis.html', lineplot=line)
+
+    # Render your plot to second (analysis.html) page
+    return render_template(
+        'analysis.html',
+        lineplot=line
+    )
 
 if __name__ == '__main__':
     app.run()
