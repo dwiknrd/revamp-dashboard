@@ -147,7 +147,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">1.First Line Graph Title</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">The Most Busy Month</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -181,10 +181,10 @@
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">2.1.Graph Title</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">The Highest Average Daily Rate</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="chart" id="linegraph2">
+                                    <div class="chart" id="bargraph2">
                                     </div>
                                 </div>
                             </div>
@@ -197,10 +197,10 @@
                             <!-- Illustrations -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">2.2.Graph Title</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Visitors Distribution for each Hotel</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="chart" id="linegraph3">
+                                    <div class="chart" id="bargraph3">
                                     </div>
                                 </div>
                             </div>
@@ -217,7 +217,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">3.Second Line Graph Title</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Highest Cancellation Rate</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -344,25 +344,25 @@
 
     <!-- This is inject code for row 1 -->
     <script>
-        var graphs = {{lineplot | safe}};
+        var graphs = {{busy_month_plot | safe}};
         Plotly.plot('linegraph',graphs,{});
     </script>
 
     <!-- This is inject code for row 2, column 1 -->
     <script>
-        var graphs2 = {{lineplot | safe}};
-        Plotly.plot('linegraph2',graphs2,{});
+        var graphs2 = {{highestADR_plot | safe}};
+        Plotly.plot('bargraph2',graphs2,{});
     </script>
 
     <!-- This is inject code for row 2, column 2 -->
     <script>
-        var graphs3 = {{lineplot | safe}};
-        Plotly.plot('linegraph3',graphs3,{});
+        var graphs3 = {{guests_dist_plot | safe}};
+        Plotly.plot('bargraph3',graphs3,{});
     </script>
 
     <!-- This is inject code for row 3 -->
     <script>
-        var graphs4 = {{lineplot | safe}};
+        var graphs4 = {{cancel_rate_plot | safe}};
         Plotly.plot('linegraph4',graphs4,{});
     </script>
 
