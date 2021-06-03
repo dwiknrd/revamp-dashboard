@@ -126,7 +126,6 @@ def cancel_rate():
     cancel_rate_plot = px.line(cancel_agg, 
                                x = cancel_agg.index,
                                y = ['City Hotel', 'Resort Hotel'],
-                               title = 'Highest Cancellation Rate',
                                labels = {'arrival_month': 'Month',
                                'variable': 'Hotel',
                                'value': 'Number of Canceled Orders'})
@@ -160,48 +159,24 @@ def analysis():
 
     # Define your plot function here
     busy_month_plot = busy_month()
-
-    # Render your plot to second (analysis.html) page
-    return render_template(
-        'analysis.html',
-        busy_month_plot=busy_month_plot
-    )
-
-    # Define your plot function here
     highestADR_plot = month_highestADR()
-
-    # Render your plot to second (analysis.html) page
-    return render_template(
-        'analysis.html',
-        highestADR_plot=highestADR_plot
-    )
-
-    # Define your plot function here
     guests_dist_plot = guests_dist()
-
-    # Render your plot to second (analysis.html) page
-    return render_template(
-        'analysis.html',
-        guests_dist_plot=guests_dist_plot
-    )
-
-    # Define your plot function here
     cancel_rate_plot = cancel_rate()
-
-    # Render your plot to second (analysis.html) page
-    return render_template(
-        'analysis.html',
-        cancel_rate_plot=cancel_rate_plot
-    )
-
-    # Define your plot function here
     lineplot = create_line()
 
+
     # Render your plot to second (analysis.html) page
     return render_template(
         'analysis.html',
+        busy_month_plot=busy_month_plot,
+        highestADR_plot=highestADR_plot,
+        guests_dist_plot=guests_dist_plot,
+        cancel_rate_plot=cancel_rate_plot,
         lineplot=lineplot
+
+
     )
+
     
     
 
