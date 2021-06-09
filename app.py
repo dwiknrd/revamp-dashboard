@@ -10,17 +10,18 @@ import numpy as np
 import json
 
 # import and cleansing the data
-data = pd.read_csv('hotel_booking.csv')
+data = pd.read_csv('data/hotel_booking.csv')
 data.dropna(inplace=True)
 
 # Change data types
 data['arrival_date'] = data['arrival_date'].astype('datetime64')
+data['children'] = data['children'].astype('int64')
 data[['hotel', 'is_canceled']] = data[['hotel', 'is_canceled']].astype('category')  
 
 # Feature Engineering
 data['arrival_month'] = data['arrival_date'].dt.month_name()
 no_canceled = data[data['is_canceled'] == 0]
-month = ['January','February','March','April','May','June','July','August','September','November','December']
+month = ['January','February','March','April','May','June','July','August','September','October','November','December']
 
 # Perform spatial analysis on guests home
 def country_of_guests():
@@ -29,6 +30,7 @@ def country_of_guests():
     plot_country_guests = px.choropleth(country_guests, 
                                         locations=country_guests['country'],
                                         color=country_guests['Number of guest'],
+                                        color_continuous_scale='RdGy',
                                         hover_name=country_guests['country'],
                                         title=None)
 
@@ -44,6 +46,7 @@ def busy_month():
     busy_month_plot = px.line(final_rush,
                               x = final_rush.index,
                               y = ['City Hotel', 'Resort Hotel'],
+                              color_discrete_sequence=['#ae2024','#2b2b2b'],
                               labels = {'arrival_month': 'Month',
                                         'variable': 'Hotel',
                                         'value': 'Number of Booking'})
@@ -52,24 +55,6 @@ def busy_month():
 
     return graphJSON
 
-
-def create_line():
-    N = 40
-    x = np.linspace(0, 1, N)
-    y = np.random.randn(N)
-    df = pd.DataFrame({'x': x, 'y': y}) # creating a sample dataframe
-
-
-    data2 = [
-        go.Scatter(
-            x=df['x'], # assign x as the dataframe column 'x'
-            y=df['y']
-        )
-    ]
-
-    graphJSON = json.dumps(data2, cls=plotly.utils.PlotlyJSONEncoder)
-
-    return graphJSON
 
 # Month with the Highest Average Daily Rate
 def month_highestADR():
@@ -80,7 +65,8 @@ def month_highestADR():
     highestADR_plot = px.bar(adr_month_hotel, 
                              x = 'arrival_month', 
                              y = 'adr', 
-                             color = 'hotel', 
+                             color = 'hotel',
+                             color_discrete_sequence=['#ae2024','#2b2b2b'],
                              barmode = 'group',
                              labels = {'arrival_month': 'Month', 
                                        'hotel' : 'Hotel',
@@ -104,6 +90,7 @@ def guests_dist():
                               x = 'value',
                               y = 'variable',
                               color = 'hotel',
+                              color_discrete_sequence=['#ae2024','#2b2b2b'],
                               barmode='group',
                               labels = {'value': 'Percentage Guests',
                               'variable': 'Age Group',
@@ -126,6 +113,7 @@ def cancel_rate():
     cancel_rate_plot = px.line(cancel_agg, 
                                x = cancel_agg.index,
                                y = ['City Hotel', 'Resort Hotel'],
+                               color_discrete_sequence=['#ae2024','#2b2b2b'],
                                labels = {'arrival_month': 'Month',
                                'variable': 'Hotel',
                                'value': 'Number of Canceled Orders'})
@@ -141,7 +129,16 @@ app = Flask(__name__)
 # To connect with first page
 @app.route('/')
 def index():
-
+    # Create box value 
+    data['visitor'] = data['adults'] + data['children']
+    visitor = data.groupby('hotel').agg({'visitor':'sum'})
+    visitor_count = {
+        'hotel_visitor' : visitor['visitor'][0],
+        'resort_visitor' : visitor['visitor'][1],
+    }
+    resort_count = len(data[data['hotel']=='Resort Hotel'])
+    hotel_count = len(data[data['hotel']=='City Hotel'])
+    
     # Define your plot function here
     country_of_guests_plot = country_of_guests()
     
@@ -149,7 +146,10 @@ def index():
     # Render your plot to first (index.html) page
     return render_template(
         'index.html',
-        country_of_guests_plot=country_of_guests_plot
+        country_of_guests_plot=country_of_guests_plot,
+        visitor_count = visitor_count,
+        resort_count = resort_count,
+        hotel_count = hotel_count
 
     )
 
@@ -162,7 +162,6 @@ def analysis():
     highestADR_plot = month_highestADR()
     guests_dist_plot = guests_dist()
     cancel_rate_plot = cancel_rate()
-    lineplot = create_line()
 
 
     # Render your plot to second (analysis.html) page
@@ -171,8 +170,7 @@ def analysis():
         busy_month_plot=busy_month_plot,
         highestADR_plot=highestADR_plot,
         guests_dist_plot=guests_dist_plot,
-        cancel_rate_plot=cancel_rate_plot,
-        lineplot=lineplot
+        cancel_rate_plot=cancel_rate_plot
 
 
     )
